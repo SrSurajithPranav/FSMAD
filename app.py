@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template_string, request, send_from_directory
 import os
 import requests
 import pandas as pd
@@ -74,7 +74,7 @@ def get_twitter_data(username):
         )
         response.raise_for_status()
         return response.json()
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException:
         return None
 
 def parse_twitter_data(user_data):
@@ -88,38 +88,38 @@ def parse_twitter_data(user_data):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
     username = request.form['username'].strip().lstrip('@')
     if not username:
-        return render_template('error.html', error="Please enter a username"), 400
+        return send_from_directory('.', 'error.html'), 400
     
-    try:
-        user_data = get_twitter_data(username)
-        if not user_data or 'data' not in user_data:
-            return render_template('error.html', error="User not found or API error"), 404
-        
-        user_df = parse_twitter_data(user_data)
-        prediction, probability = analyzer.predict(user_df)
-        confidence = round(max(probability) * 100, 1)
-        
-        result = {
-            'username': username,
-            'prediction': 'fake' if prediction[0] == 1 else 'genuine',
-            'confidence': confidence,
-            'features': user_df.iloc[0].to_dict(),
-            'account_data': {
-                'created_at': user_data['data'].get('created_at', 'N/A'),
-                'verified': user_data['data'].get('verified', False),
-                'description': user_data['data'].get('description', '')
-            }
+    user_data = get_twitter_data(username)
+    if not user_data or 'data' not in user_data:
+        return send_from_directory('.', 'error.html'), 404
+    
+    user_df = parse_twitter_data(user_data)
+    prediction, probability = analyzer.predict(user_df)
+    confidence = round(max(probability) * 100, 1)
+    
+    result = {
+        'username': username,
+        'prediction': 'fake' if prediction[0] == 1 else 'genuine',
+        'confidence': confidence,
+        'features': user_df.iloc[0].to_dict(),
+        'account_data': {
+            'created_at': user_data['data'].get('created_at', 'N/A'),
+            'verified': user_data['data'].get('verified', False),
+            'description': user_data['data'].get('description', '')
         }
-        return render_template('result.html', result=result)
-    
-    except Exception as e:
-        return render_template('error.html', error=str(e)), 500
+    }
+    return render_template_string(open('result.html').read(), result=result)
+
+@app.route('/<filename>')
+def serve_static(filename):
+    return send_from_directory('.', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
