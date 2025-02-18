@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression
 app = Flask(__name__)
 
 # Twitter API Configuration
-BEARER_TOKEN = os.getenv("BEARER_TOKEN", "AAAAAAAAAAAAAAAAAAAAAANoxAEAAAAARIratdNtUpsn7Gxk5YZHrDgXVmI%3DhdjZY09cKTCe7xAioFXli8PM2qq68rtGjVcqFwYAvGjlnAARsY")
+BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAANoxAEAAAAARIratdNtUpsn7Gxk5YZHrDgXVmI%3DhdjZY09cKTCe7xAioFXli8PM2qq68rtGjVcqFwYAvGjlnAARsY"
 API_ENDPOINT = "https://api.twitter.com/2/users/by/username/"
 
 # Features adjusted for Twitter API v2 capabilities
@@ -27,11 +27,9 @@ class TwitterAccountAnalyzer:
 
     def initialize_models(self):
         self.models = {
-            'rf': RandomForestClassifier(n_estimators=150, random_state=42),
-            'gb': GradientBoostingClassifier(n_estimators=150, random_state=42),
             'lr': LogisticRegression(max_iter=1000),
             'voting': VotingClassifier(
-                estimators=[('rf', self.models['rf']), ('gb', self.models['gb']), ('lr', self.models['lr'])],
+                estimators=[('rf', RandomForestClassifier(n_estimators=150, random_state=42)), ('gb',  GradientBoostingClassifier(n_estimators=150, random_state=42))],
                 voting='soft'
             )
         }
