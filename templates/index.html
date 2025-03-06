@@ -5,39 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Account Detector</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="charts.css">
     <link rel="stylesheet" href="animations.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="script.js" defer></script>
     <script src="animations.js" defer></script>
     <script src="api.js" defer></script>
-    <script src="animations.js" defer></script>
 </head>
 <body>
-    <div class="background">
-        <div class="overlay"></div>
-        <div class="container">
-            <h1 class="title">Fake Account Detector</h1>
-            <p class="subtitle">Analyze Twitter accounts with AI-powered insights</p>
-            
-            <div class="input-container">
-                <input type="text" id="username" placeholder="Enter Twitter Username...">
-                <button id="analyzeBtn">Analyze</button>
-            </div>
+    <div class="background"></div>
+    <div class="overlay"></div>
 
-            <div class="suggestions">
-                <p>Try: 
-                    <span class="suggested-username">@elonmusk</span> | 
-                    <span class="suggested-username">@BillGates</span> | 
-                    <span class="suggested-username">@randomuser123</span>
-                </p>
-            </div>
+    <div class="container">
+        <h1 class="title">Fake Account Detector</h1>
+        <p class="subtitle">Analyze Twitter accounts with AI-powered insights</p>
 
-            <div id="loading" class="hidden">
-                <div class="spinner"></div>
-                <p>Analyzing account...</p>
-            </div>
+        <div class="input-container">
+            <input type="text" id="username" placeholder="Enter Twitter Username...">
+            <button id="analyzeBtn" class="btn-glass">Analyze</button>
+        </div>
 
-            <div id="errorMessage" class="hidden"></div>
+        <div id="errorMessage" class="hidden error-msg">Invalid username. Try again.</div>
+        <div id="loading" class="hidden loading">Analyzing...</div>
+
+        <div class="recent-searches">
+            <h2>Recent Searches</h2>
+            <ul id="recentUsers"></ul>
         </div>
     </div>
 </body>
