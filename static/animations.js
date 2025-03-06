@@ -1,4 +1,3 @@
-// animations.js
 document.addEventListener("DOMContentLoaded", function () {
     // Floating animation for the container
     const container = document.querySelector(".container");
