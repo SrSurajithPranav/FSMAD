@@ -3,58 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Analysis Result - Fake Account Detection</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 </head>
 <body>
     <div class="container">
         <h1>Analysis Result</h1>
-        <p><strong>Username:</strong> @{{ result.username }}</p>
-        <p><strong>Prediction:</strong> <span class="{{ 'fake' if result.prediction == 'fake' else 'genuine' }}">{{ result.prediction | capitalize }}</span></p>
-        <p><strong>Confidence:</strong> {{ result.confidence }}%</p>
+        <div class="result-card">
+            <h2>@{{ result.username }}</h2>
+            <p><strong>Status:</strong> <span class="{{ 'fake' if result.prediction == 'fake' else 'genuine' }}">{{ result.prediction.capitalize() }}</span></p>
+            <p><strong>Confidence:</strong> {{ result.confidence }}%</p>
+            <p><strong>Account Created:</strong> {{ result.account_data.created_at }}</p>
+            <p><strong>Verified:</strong> {{ 'Yes' if result.account_data.verified else 'No' }}</p>
+            <p><strong>Description:</strong> {{ result.account_data.description }}</p>
+            <p><strong>Data Source:</strong> {{ result.account_data.source }}</p>
+        </div>
 
-        <h2>Feature Breakdown:</h2>
-        <table>
-            <tr>
-                <th>Feature</th>
-                <th>Value</th>
-            </tr>
-            {% for key, value in result.features.items() %}
-            <tr>
-                <td>{{ key.replace('_', ' ') | title }}</td>
-                <td>{{ value | comma }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        <h2>Feature Breakdown</h2>
+        <canvas id="featuresChart"></canvas>
 
-        <h2>Account Details:</h2>
-        <p><strong>Created At:</strong> {{ result.account_data.created_at }}</p>
-        <p><strong>Verified:</strong> {{ "Yes" if result.account_data.verified else "No" }}</p>
-        <p><strong>Description:</strong> {{ result.account_data.description }}</p>
-        <p><strong>Data Source:</strong> {{ result.account_data.source }}</p>
+        <h2>Comparative Analysis</h2>
+        <div class="grid-container">
+            <div id="comparisonChartContainer">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+            <div id="radarChartContainer">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
 
-        <h2>Export Report:</h2>
-        <button onclick="exportPDF()">Download PDF</button>
-        <button onclick="exportJSON()">Download JSON</button>
+        <h2>Insights & Trends</h2>
+        <div id="trendsChartContainer">
+            <canvas id="trendsChart"></canvas>
+        </div>
 
-        <a href="/">Analyze Another</a>
+        <a href="/" class="btn">Analyze Another Account</a>
     </div>
 
     <script>
-        function exportPDF() {
-            alert("PDF Export coming soon!");
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const featureData = {{ result.features | tojson }};
+            const labels = Object.keys(featureData);
+            const values = Object.values(featureData);
 
-        function exportJSON() {
-            const data = {{ result | tojson }};
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'report.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+            new Chart(document.getElementById('featuresChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Feature Values',
+                        data: values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            new Chart(document.getElementById('comparisonChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Followers', 'Friends', 'Statuses', 'Listed'],
+                    datasets: [{
+                        data: [featureData.followers_count, featureData.friends_count, featureData.statuses_count, featureData.listed_count],
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0']
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Feature Distribution',
+                        data: values,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            new Chart(document.getElementById('trendsChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Engagement Trend',
+                        data: [featureData.statuses_count / 4, featureData.statuses_count / 3, featureData.statuses_count / 2, featureData.statuses_count],
+                        borderColor: '#42a5f5',
+                        fill: false
+                    }]
+                },
+                options: { responsive: true }
+            });
+        });
     </script>
 </body>
 </html>
