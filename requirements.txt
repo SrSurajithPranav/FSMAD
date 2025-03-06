@@ -1,0 +1,7 @@
+Flask  
+pandas  
+scikit-learn  
+requests  
+datetime  
+jinja2  
+gunicorn
