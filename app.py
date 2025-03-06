@@ -26,10 +26,10 @@ def format_date_filter(date_str):
 
 # Twitter API Configuration with multiple bearer tokens
 BEARER_TOKENS = [
-    os.getenv("AAAAAAAAAAAAAAAAAAAAAANoxAEAAAAARIratdNtUpsn7Gxk5YZHrDgXVmI%3DhdjZY09cKTCe7xAioFXli8PM2qq68rtGjVcqFwYAvGjlnAARsY"),
-    os.getenv("AAAAAAAAAAAAAAAAAAAAALOhywEAAAAAW8Oi86wzl4ft4tnhzRlyZ3%2FFGF8%3D4ItRbnSYTeK9jcWopAugYeMcqfAOypNi5gBERQ4wBjY4aq9phL"),
-    os.getenv("AAAAAAAAAAAAAAAAAAAAACzpygEAAAAA8k18d8ZP23NtWodqYI5x6mwfS58%3DDLK7sv0qrqEu7u7bovNoHegux5EkHiVhKqp41jPV1mKzYRcQMm"),
-    os.getenv("AAAAAAAAAAAAAAAAAAAAACg7zAEAAAAABBikdwYlorE2FeNpNqrkT8uV1fk%3DsxxU1YZAYwO0G56tjTPSElgal0CEy0HF3zJ4a5jtpmTdRyO4h7")
+    "AAAAAAAAAAAAAAAAAAAAALOhywEAAAAAW8Oi86wzl4ft4tnhzRlyZ3%2FFGF8%3D4ItRbnSYTeK9jcWopAugYeMcqfAOypNi5gBERQ4wBjY4aq9phL",
+    "AAAAAAAAAAAAAAAAAAAAAANoxAEAAAAARIratdNtUpsn7Gxk5YZHrDgXVmI%3DhdjZY09cKTCe7xAioFXli8PM2qq68rtGjVcqFwYAvGjlnAARsY",
+    "AAAAAAAAAAAAAAAAAAAAACg7zAEAAAAABBikdwYlorE2FeNpNqrkT8uV1fk%3DsxxU1YZAYwO0G56tjTPSElgal0CEy0HF3zJ4a5jtpmTdRyO4h7",
+    "AAAAAAAAAAAAAAAAAAAAACzpygEAAAAA8k18d8ZP23NtWodqYI5x6mwfS58%3DDLK7sv0qrqEu7u7bovNoHegux5EkHiVhKqp41jPV1mKzYRcQMm"
 ]
 API_ENDPOINT = "https://api.twitter.com/2/users/by/username/"
 
@@ -109,7 +109,7 @@ def parse_twitter_data(user_data):
 
 @app.route('/')
 def home():
-    static_users = analyzer.static_data['name'].tolist()
+    static_users = analyzer.static_data['name'].tolist()  # Use 'name' for static dataset
     return render_template('index.html', static_users=static_users)
 
 @app.route('/analyze', methods=['POST'])
@@ -127,7 +127,7 @@ def analyze():
             confidence = round(max(probability) * 100, 1)
             
             result = {
-                'username': username,
+                'username': user_data['data'].get('username', 'N/A'),  # Keep 'username' for API
                 'prediction': 'fake' if prediction[0] == 1 else 'genuine',
                 'confidence': confidence,
                 'features': user_df.iloc[0].to_dict(),
@@ -146,7 +146,7 @@ def analyze():
             confidence = round(max(probability) * 100, 1)
             
             result = {
-                'username': username,
+                'username': username,  # Use entered username since it's from static dataset
                 'prediction': 'fake' if prediction[0] == 1 else 'genuine',
                 'confidence': confidence,
                 'features': static_data.iloc[0].to_dict(),
