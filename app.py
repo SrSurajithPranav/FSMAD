@@ -76,8 +76,8 @@ class TwitterAccountAnalyzer:
         probability = self.models['voting'].predict_proba(X_scaled)[0]
         return prediction, probability
 
-    def get_static_user_data(self, username):
-        user_data = self.static_data[self.static_data['username'] == username]
+    def get_static_user_data(self, name):
+        user_data = self.static_data[self.static_data['name'] == name]
         if not user_data.empty:
             return user_data[REQUIRED_FEATURES].iloc[0:1]
         return None
@@ -109,7 +109,7 @@ def parse_twitter_data(user_data):
 
 @app.route('/')
 def home():
-    static_users = analyzer.static_data['username'].tolist()
+    static_users = analyzer.static_data['name'].tolist()
     return render_template('index.html', static_users=static_users)
 
 @app.route('/analyze', methods=['POST'])
