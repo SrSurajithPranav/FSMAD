@@ -1,41 +1,37 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("analyze-form");
-    const input = document.getElementById("username");
-    const button = document.getElementById("analyze-btn");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const usernameInput = document.getElementById("username");
     const loading = document.getElementById("loading");
     const errorMessage = document.getElementById("errorMessage");
-    const suggestions = document.querySelectorAll(".suggested-username");
 
-    // Handle form submission
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        const username = input.value.trim();
-        if (username === "") {
-            showError("Please enter a username.");
+    analyzeBtn.addEventListener("click", async () => {
+        const username = usernameInput.value.trim();
+        if (!username) {
+            errorMessage.textContent = "Please enter a username.";
+            errorMessage.classList.remove("hidden");
             return;
         }
-        startLoading();
-        this.submit();
-    });
 
-    // Handle username suggestions
-    suggestions.forEach(suggestion => {
-        suggestion.addEventListener("click", function () {
-            input.value = this.textContent;
-        });
-    });
-
-    // Show loading animation
-    function startLoading() {
-        button.disabled = true;
-        button.style.background = "#999";
         loading.classList.remove("hidden");
         errorMessage.classList.add("hidden");
-    }
 
-    // Show error message
-    function showError(message) {
-        errorMessage.textContent = message;
-        errorMessage.classList.remove("hidden");
-    }
+        try {
+            const response = await fetch(`/analyze?username=${username}`);
+            if (!response.ok) {
+                throw new Error("User not found or API error.");
+            }
+            window.location.href = `/result?username=${username}`;
+        } catch (error) {
+            errorMessage.textContent = error.message;
+            errorMessage.classList.remove("hidden");
+        } finally {
+            loading.classList.add("hidden");
+        }
+    });
+
+    document.querySelectorAll(".suggested-username").forEach((element) => {
+        element.addEventListener("click", () => {
+            usernameInput.value = element.textContent;
+        });
+    });
 });
