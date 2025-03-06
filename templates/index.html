@@ -4,27 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Account Detector</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Fake Account Detector</h1>
-        <form id="analyzeForm" action="/analyze" method="POST">
-            <label for="username">Enter Twitter Username:</label>
-            <input type="text" id="username" name="username" placeholder="@example" required>
-            <button type="submit">Analyze</button>
-        </form>
+    <div class="background">
+        <div class="overlay"></div>
+        <div class="container">
+            <h1 class="title">Fake Account Detector</h1>
+            <p class="subtitle">Analyze Twitter accounts with AI-powered insights</p>
+            
+            <div class="input-container">
+                <input type="text" id="username" placeholder="Enter Twitter Username...">
+                <button id="analyzeBtn">Analyze</button>
+            </div>
 
-        <div id="staticDataset">
-            <label for="staticUserSelect">Or select from static dataset:</label>
-            <select id="staticUserSelect">
-                <option value="">-- Select Username --</option>
-                {% for user in static_users %}
-                    <option value="{{ user }}">{{ user }}</option>
-                {% endfor %}
-            </select>
-            <button id="analyzeStatic">Analyze Selected User</button>
+            <div class="suggestions">
+                <p>Try: 
+                    <span class="suggested-username">@elonmusk</span> | 
+                    <span class="suggested-username">@BillGates</span> | 
+                    <span class="suggested-username">@randomuser123</span>
+                </p>
+            </div>
+
+            <div id="loading" class="hidden">
+                <div class="spinner"></div>
+                <p>Analyzing account...</p>
+            </div>
+
+            <div id="errorMessage" class="hidden"></div>
         </div>
     </div>
 </body>
