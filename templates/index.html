@@ -4,33 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Account Detector</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="charts.css">
-    <link rel="stylesheet" href="animations.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="script.js" defer></script>
-    <script src="animations.js" defer></script>
-    <script src="api.js" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='loading.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='smooth-scroll.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='confetti.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-    <div class="background"></div>
-    <div class="overlay"></div>
-
     <div class="container">
-        <h1 class="title">Fake Account Detector</h1>
-        <p class="subtitle">Analyze Twitter accounts with AI-powered insights</p>
+        <h1>Fake Account Detector</h1>
+        <form id="analyzeForm" action="/analyze" method="POST">
+            <label for="username">Enter Twitter Username:</label>
+            <input type="text" id="username" name="username" placeholder="@example" required>
+            <button type="submit">Analyze</button>
+        </form>
 
-        <div class="input-container">
-            <input type="text" id="username" placeholder="Enter Twitter Username...">
-            <button id="analyzeBtn" class="btn-glass">Analyze</button>
-        </div>
-
-        <div id="errorMessage" class="hidden error-msg">Invalid username. Try again.</div>
-        <div id="loading" class="hidden loading">Analyzing...</div>
-
-        <div class="recent-searches">
-            <h2>Recent Searches</h2>
-            <ul id="recentUsers"></ul>
+        <div id="staticDataset">
+            <label for="staticUserSelect">Or select from static dataset:</label>
+            <select id="staticUserSelect">
+                <option value="">-- Select Username --</option>
+                {% for user in static_users %}
+                    <option value="{{ user }}">{{ user }}</option>
+                {% endfor %}
+            </select>
+            <button id="analyzeStatic">Analyze Selected User</button>
         </div>
     </div>
 </body>
