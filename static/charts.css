@@ -1,8 +1,0 @@
-canvas {
-    margin-bottom: 25px;
-    transition: transform 0.3s ease;
-}
-
-canvas:hover {
-    transform: scale(1.02);
-}
