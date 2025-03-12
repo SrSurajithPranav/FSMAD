@@ -1,0 +1,32 @@
+body.light-theme {
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    color: #333;
+}
+
+body.light-theme .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .input-field {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+body.light-theme .input-field:focus {
+    background: rgba(255, 255, 255, 1);
+}
+
+body.light-theme .title {
+    color: #007bff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .error-title {
+    color: #d9534f;
+}
+
+body.light-theme .btn-theme {
+    background: rgba(0, 0, 0, 0.1);
+}
