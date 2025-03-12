@@ -1,0 +1,131 @@
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tilt-card {
+    transition: transform 0.1s ease;
+}
+
+.input-label {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    display: block;
+    color: #e0e0e0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.input-field {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1.1rem;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.input-field:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.02);
+}
+
+.btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #00ddeb);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #00b7c3);
+    transform: scale(1.1);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #adb5bd);
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(45deg, #5a6268, #959ca3);
+    transform: scale(1.1);
+}
+
+.btn-tertiary {
+    background: transparent;
+    color: #00ddeb;
+    border: 2px solid #00ddeb;
+    text-decoration: none;
+}
+
+.btn-tertiary:hover {
+    background: #00ddeb;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.btn-theme {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+}
+
+.fake {
+    color: #ff4d4d;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.genuine {
+    color: #00cc00;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #00ddeb;
+    border-top: 6px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
