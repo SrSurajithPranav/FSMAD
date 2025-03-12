@@ -1,153 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
-
 body {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
     text-align: center;
-    overflow: hidden;
-}
-
-.background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: url('https://source.unsplash.com/1600x900/?cyber,technology') no-repeat center center/cover;
-    filter: blur(10px) brightness(0.5);
-    z-index: -2;
-}
-
-.overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
 }
 
 .container {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease-in-out;
-    width: 90%;
-    max-width: 400px;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-.container:hover {
-    transform: scale(1.05);
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
 }
 
-.title {
-    font-size: 2.2rem;
+button {
+    background: #ff5722;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #e64a19;
+}
+
+.fake {
+    color: red;
     font-weight: bold;
-    margin-bottom: 10px;
 }
 
-.subtitle {
-    font-size: 1.2rem;
-    opacity: 0.8;
-    margin-bottom: 20px;
+.genuine {
+    color: green;
+    font-weight: bold;
 }
 
-.input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+/* Light mode styles */
+body.light-mode {
+    background: #f5f5f5;
+    color: #121212;
 }
 
-input {
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    width: 250px;
-    font-size: 1rem;
-    outline: none;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    text-align: center;
-    transition: box-shadow 0.3s ease-in-out;
+body.light-mode .container {
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+body.light-mode button {
+    background: #007bff;
 }
 
-input:focus {
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-}
-
-.btn-glass {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s;
-}
-
-.btn-glass:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.1);
-}
-
-.hidden {
-    display: none;
-}
-
-.error-msg {
-    color: #ff4d4d;
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
-
-.loading {
-    color: #00ffcc;
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
-
-/* Recent Searches Section */
-.recent-searches {
-    margin-top: 20px;
-    text-align: left;
-}
-
-.recent-searches h2 {
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-}
-
-.recent-searches ul {
-    list-style: none;
-    padding: 0;
-}
-
-.recent-searches li {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 8px;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    transition: background 0.3s;
-    cursor: pointer;
-}
-
-.recent-searches li:hover {
-    background: rgba(255, 255, 255, 0.3);
+body.light-mode button:hover {
+    background: #0056b3;
 }
