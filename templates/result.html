@@ -4,52 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" defer></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/particles.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Analysis Result</h1>
-        <p><strong>Username:</strong> @{{ result.username }}</p>
-        <p><strong>Prediction:</strong> <span class="{{ 'fake' if result.prediction == 'fake' else 'genuine' }}">{{ result.prediction | capitalize }}</span></p>
-        <p><strong>Confidence:</strong> {{ result.confidence }}%</p>
-
-        <h2>Feature Breakdown:</h2>
-        <table>
-            <tr>
-                <th>Feature</th>
-                <th>Value</th>
-            </tr>
-            {% for key, value in result.features.items() %}
-            <tr>
-                <td>{{ key.replace('_', ' ') | title }}</td>
-                <td>{{ value | comma }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <h2>Account Details:</h2>
-        <p><strong>Created At:</strong> {{ result.account_data.created_at }}</p>
-        <p><strong>Verified:</strong> {{ "Yes" if result.account_data.verified else "No" }}</p>
-        <p><strong>Description:</strong> {{ result.account_data.description }}</p>
-        <p><strong>Data Source:</strong> {{ result.account_data.source }}</p>
-
-        <h2>Export Report:</h2>
-        <button onclick="exportPDF()">Download PDF</button>
-        <button onclick="exportJSON()">Download JSON</button>
-
-        <a href="/">Analyze Another</a>
+    <div id="particles-js" class="particle-bg"></div>
+    <div class="theme-toggle">
+        <button id="themeSwitch" class="btn btn-theme">☀️</button>
     </div>
+    <div class="container result-container">
+        <h1 class="title">Analysis Result</h1>
+        <div class="glass-card tilt-card" data-tilt>
+            <p><strong>Username:</strong> @{{ result.username }}</p>
+            <p><strong>Prediction:</strong> <span class="{{ 'fake' if result.prediction == 'fake' else 'genuine' }}">{{ result.prediction | capitalize }}</span></p>
+            <p><strong>Confidence:</strong> {{ result.confidence }}%</p>
 
+            <h2>Feature Breakdown</h2>
+            <canvas id="featureChart" width="400" height="200"></canvas>
+
+            <h2>Account Details</h2>
+            <p><strong>Created At:</strong> {{ result.account_data.created_at }}</p>
+            <p><strong>Verified:</strong> {{ "Yes" if result.account_data.verified else "No" }}</p>
+            <p><strong>Description:</strong> {{ result.account_data.description }}</p>
+            <p><strong>Data Source:</strong> {{ result.account_data.source }}</p>
+
+            <div class="button-group">
+                <button onclick="exportPDF()" class="btn btn-primary">Download PDF</button>
+                <button onclick="exportJSON()" class="btn btn-secondary">Download JSON</button>
+                <a href="/" class="btn btn-tertiary">Analyze Another</a>
+            </div>
+        </div>
+    </div>
     <script>
-        function exportPDF() {
-            alert("PDF Export coming soon!");
-        }
-
+        const result = {{ result | tojson }};
+        function exportPDF() { alert("PDF Export coming soon!"); }
         function exportJSON() {
-            const data = {{ result | tojson }};
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'report.json';
@@ -58,6 +62,5 @@
             document.body.removeChild(a);
         }
     </script>
-    <script src="{{ url_for('static', filename='confetti.js') }}"></script>
 </body>
 </html>
