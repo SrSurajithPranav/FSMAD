@@ -1,75 +1,48 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const analyzeBtn = document.getElementById("analyzeBtn");
-    const usernameInput = document.getElementById("username");
-    const loading = document.getElementById("loading");
-    const errorMessage = document.getElementById("errorMessage");
-    const recentUsersList = document.getElementById("recentUsers");
+document.addEventListener('DOMContentLoaded', function () {
+    const analyzeForm = document.getElementById('analyzeForm');
+    const staticUserSelect = document.getElementById('staticUserSelect');
+    const analyzeStaticButton = document.getElementById('analyzeStatic');
 
-    // Load recent searches from local storage
-    loadRecentSearches();
+    // Validate username input
+    if (analyzeForm) {
+        analyzeForm.addEventListener('submit', function (event) {
+            const usernameInput = document.getElementById('username');
+            const username = usernameInput.value.trim();
 
-    analyzeBtn.addEventListener("click", async () => {
-        const username = usernameInput.value.trim();
-
-        if (!username) {
-            showError("Please enter a username.");
-            return;
-        }
-
-        startLoading();
-
-        try {
-            const response = await fetch(`/analyze?username=${username}`);
-            if (!response.ok) {
-                throw new Error("User not found or API error.");
+            if (!username) {
+                alert('Please enter a Twitter username.');
+                event.preventDefault();
+            } else if (!username.startsWith('@')) {
+                alert('Username must start with "@".');
+                event.preventDefault();
             }
-            
-            saveRecentSearch(username);
-            window.location.href = `/result?username=${username}`;
-        } catch (error) {
-            showError("Invalid username. Try again.");
-        } finally {
-            stopLoading();
-        }
-    });
-
-    function showError(message) {
-        errorMessage.textContent = message;
-        errorMessage.classList.remove("hidden");
-    }
-
-    function startLoading() {
-        loading.classList.remove("hidden");
-        errorMessage.classList.add("hidden");
-    }
-
-    function stopLoading() {
-        loading.classList.add("hidden");
-    }
-
-    function saveRecentSearch(username) {
-        let searches = JSON.parse(localStorage.getItem("recentSearches")) || [];
-        
-        if (!searches.includes(username)) {
-            searches.unshift(username);
-            if (searches.length > 5) searches.pop(); // Keep only last 5 searches
-            localStorage.setItem("recentSearches", JSON.stringify(searches));
-        }
-
-        loadRecentSearches();
-    }
-
-    function loadRecentSearches() {
-        recentUsersList.innerHTML = "";
-        let searches = JSON.parse(localStorage.getItem("recentSearches")) || [];
-
-        searches.forEach(user => {
-            let li = document.createElement("li");
-            li.textContent = user;
-            li.addEventListener("click", () => {
-                usernameInput.value = user;
-            });
-            recentUsersList.appendChild(li);
         });
     }
+
+    // Handle static dataset selection
+    if (staticUserSelect && analyzeStaticButton) {
+        analyzeStaticButton.addEventListener('click', function () {
+            const selectedUser = staticUserSelect.value;
+            if (!selectedUser) {
+                alert('Please select a username from the dataset.');
+                return;
+            }
+
+            // Submit the selected username for analysis
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/analyze';
+
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'username';
+            input.value = selectedUser;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
+
+    // Add any additional client-side logic here
 });
