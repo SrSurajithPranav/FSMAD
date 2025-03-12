@@ -24,18 +24,19 @@ def format_date_filter(date_str):
     except ValueError:
         return date_str
 
-# Twitter API Configuration with multiple bearer tokens
+# Twitter API Configuration (unchanged)
 BEARER_TOKENS = [
+
     "AAAAAAAAAAAAAAAAAAAAALOhywEAAAAAW8Oi86wzl4ft4tnhzRlyZ3%2FFGF8%3D4ItRbnSYTeK9jcWopAugYeMcqfAOypNi5gBERQ4wBjY4aq9phL",
     "AAAAAAAAAAAAAAAAAAAAAANoxAEAAAAARIratdNtUpsn7Gxk5YZHrDgXVmI%3DhdjZY09cKTCe7xAioFXli8PM2qq68rtGjVcqFwYAvGjlnAARsY",
     "AAAAAAAAAAAAAAAAAAAAACg7zAEAAAAABBikdwYlorE2FeNpNqrkT8uV1fk%3DsxxU1YZAYwO0G56tjTPSElgal0CEy0HF3zJ4a5jtpmTdRyO4h7",
     "AAAAAAAAAAAAAAAAAAAAACzpygEAAAAA8k18d8ZP23NtWodqYI5x6mwfS58%3DDLK7sv0qrqEu7u7bovNoHegux5EkHiVhKqp41jPV1mKzYRcQMm"
 ]
 API_ENDPOINT = "https://api.twitter.com/2/users/by/username/"
-
 REQUIRED_FEATURES = ['followers_count', 'friends_count', 'statuses_count', 'listed_count']
 
 class TwitterAccountAnalyzer:
+    # Unchanged implementation from your original code
     def __init__(self):
         self.models = {}
         self.scaler = MinMaxScaler()
@@ -66,8 +67,7 @@ class TwitterAccountAnalyzer:
         fusers_df = pd.read_csv('fusers.csv')
         users_df['label'] = 0
         fusers_df['label'] = 1
-        combined_df = pd.concat([users_df, fusers_df], ignore_index=True)
-        return combined_df
+        return pd.concat([users_df, fusers_df], ignore_index=True)
 
     def predict(self, user_df):
         X = user_df[REQUIRED_FEATURES]
@@ -78,15 +78,12 @@ class TwitterAccountAnalyzer:
 
     def get_static_user_data(self, name):
         user_data = self.static_data[self.static_data['name'] == name]
-        if not user_data.empty:
-            return user_data[REQUIRED_FEATURES].iloc[0:1]
-        return None
+        return user_data[REQUIRED_FEATURES].iloc[0:1] if not user_data.empty else None
 
 analyzer = TwitterAccountAnalyzer()
 
 def get_twitter_data(username):
     params = {"user.fields": "public_metrics,created_at,description,verified"}
-    
     for token in BEARER_TOKENS:
         headers = {"Authorization": f"Bearer {token}"}
         try:
@@ -95,8 +92,7 @@ def get_twitter_data(username):
             return response.json()
         except requests.exceptions.RequestException:
             continue
-    
-    return None  
+    return None
 
 def parse_twitter_data(user_data):
     metrics = user_data['data']['public_metrics']
@@ -109,7 +105,7 @@ def parse_twitter_data(user_data):
 
 @app.route('/')
 def home():
-    static_users = analyzer.static_data['name'].tolist()  # Use 'name' for static dataset
+    static_users = analyzer.static_data['name'].tolist()
     return render_template('index.html', static_users=static_users)
 
 @app.route('/analyze', methods=['POST'])
@@ -120,14 +116,12 @@ def analyze():
     
     try:
         user_data = get_twitter_data(username)
-        
         if user_data and 'data' in user_data:
             user_df = parse_twitter_data(user_data)
             prediction, probability = analyzer.predict(user_df)
             confidence = round(max(probability) * 100, 1)
-            
             result = {
-                'username': user_data['data'].get('username', 'N/A'),  # Keep 'username' for API
+                'username': user_data['data'].get('username', 'N/A'),
                 'prediction': 'fake' if prediction[0] == 1 else 'genuine',
                 'confidence': confidence,
                 'features': user_df.iloc[0].to_dict(),
@@ -144,9 +138,8 @@ def analyze():
         if static_data is not None:
             prediction, probability = analyzer.predict(static_data)
             confidence = round(max(probability) * 100, 1)
-            
             result = {
-                'username': username,  # Use entered username since it's from static dataset
+                'username': username,
                 'prediction': 'fake' if prediction[0] == 1 else 'genuine',
                 'confidence': confidence,
                 'features': static_data.iloc[0].to_dict(),
@@ -159,7 +152,7 @@ def analyze():
             }
             return render_template('result.html', result=result)
         
-        return render_template('error.html', error="User not found in API or static dataset"), 404
+        return render_template('error.html', error="User not found"), 404
     
     except Exception as e:
         return render_template('error.html', error=str(e)), 500
