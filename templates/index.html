@@ -4,35 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake Account Detector</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='loading.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='theme.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='smooth-scroll.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='confetti.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js" defer></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/particles.js') }}" defer></script>
 </head>
 <body>
+    <div id="particles-js" class="particle-bg"></div>
+    <div class="theme-toggle">
+        <button id="themeSwitch" class="btn btn-theme">☀️</button>
+    </div>
     <div class="container">
-        <h1>Fake Account Detector</h1>
-        <form id="analyzeForm" action="/analyze" method="POST">
-            <label for="username">Enter Twitter Username:</label>
-            <input type="text" id="username" name="username" placeholder="@example" required>
-            <button type="submit">Analyze</button>
-        </form>
-
-        <div id="staticDataset">
-            <label for="staticUserSelect">Or select from static dataset:</label>
-            <select id="staticUserSelect">
+        <h1 class="title">Fake Account Detector</h1>
+        <div class="glass-card tilt-card" data-tilt>
+            <form id="analyzeForm" action="/analyze" method="POST">
+                <label for="username" class="input-label">Enter Twitter Username</label>
+                <input type="text" id="username" name="username" placeholder="@example" required class="input-field">
+                <button type="submit" class="btn btn-primary">Analyze</button>
+            </form>
+        </div>
+        <div class="glass-card tilt-card" data-tilt>
+            <label for="staticUserSelect" class="input-label">Or Select from Dataset</label>
+            <select id="staticUserSelect" class="input-field">
                 <option value="">-- Select Username --</option>
                 {% for user in static_users %}
                     <option value="{{ user }}">{{ user }}</option>
                 {% endfor %}
             </select>
-            <button id="analyzeStatic">Analyze Selected User</button>
+            <button id="analyzeStatic" class="btn btn-secondary">Analyze Selected</button>
         </div>
+    </div>
+    <div id="loader" class="loader hidden">
+        <div class="spinner"></div>
     </div>
 </body>
 </html>
